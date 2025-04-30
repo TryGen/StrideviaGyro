@@ -13,7 +13,10 @@ namespace StrideviaGyroIntake
 {
     public partial class Form1 : Form
     {
-     
+
+        DataIntake data = new DataIntake();
+
+        private int normalizer = 100;
 
         public Form1()
         {
@@ -36,6 +39,8 @@ namespace StrideviaGyroIntake
 
             chart1.Legends.Clear();
 
+            data.getRawData();
+
             Series series = new Series
             {
                 Name = "Function",
@@ -54,26 +59,28 @@ namespace StrideviaGyroIntake
             chart1.Series.Add(series);
             chart1.Series.Add(series2);
 
-            for (double x = -10; x <= 10; x += 0.1)
-            {
-                double y = Math.Sin(x);
-                series.Points.AddXY(x, y);
-            }
 
-            for (double x = -10; x <= 10; x += 0.1)
+
+            /*   for (double x = 0; x < data.size; x += 1)
+               {
+                   double y = data.gyroData[(int)(x)].toAngle();
+                   series.Points.AddXY(x, y);
+               }*/
+
+            for (double x = 0; x < data.size / normalizer; x += 0.1)
             {
-                double y = Math.Cos(x);
-                series2.Points.AddXY(x, y);
+                double y = data.gyroData[(int)(x*normalizer)].toAngle();
+                series.Points.AddXY(x, y);
             }
 
             chartArea.AxisX.Crossing = 0;
             chartArea.AxisY.Crossing = 0;
 
             
-            chartArea.AxisX.Minimum = -10;
-            chartArea.AxisX.Maximum = 10;
-            chartArea.AxisY.Minimum = -1.5;
-            chartArea.AxisY.Maximum = 1.5;
+            chartArea.AxisX.Minimum = 0;
+            chartArea.AxisX.Maximum = 6;
+            chartArea.AxisY.Minimum = 0;
+            chartArea.AxisY.Maximum = 3;
 
            
             chartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;

@@ -5,12 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Globalization;
-class DataIntake
+public class DataIntake
 {
 
     private string path = "C:\\Users\\user\\Desktop\\angle_test.csv";
     private List<string[]> csvData = new List<string[]>();
     public List<Quaternion> gyroData = new List<Quaternion>();
+
+    /// <summary>
+    /// The time it takes the gyroscope to calibrate
+    /// </summary>
+    private int calibrationTime = 190;
+
+    public int size;
 
     public void getRawData()
     {
@@ -18,7 +25,7 @@ class DataIntake
 
         int col, sizeData = csvData.Count;
 
-        for (int row = 1; row < sizeData; row++)
+        for (int row = calibrationTime; row < sizeData; row++)
         {
             col = 7;
 
@@ -41,11 +48,8 @@ class DataIntake
             }
         }
 
-        for (int i = 1; i < 100; i++)
-        {
-            Console.Write(gyroData[i].x);
-            Console.WriteLine();
-        }
+        size = gyroData.Count;
+       
 
     }
 
