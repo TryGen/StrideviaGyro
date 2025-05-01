@@ -20,9 +20,13 @@ namespace StrideviaGyroIntake
 
         public Form1()
         {
+            Animation anim = new Animation();
+            anim.Show();
+
             InitializeComponent();
             InitializeChart();
             PlotFunction();
+
         }
 
         private void InitializeChart()

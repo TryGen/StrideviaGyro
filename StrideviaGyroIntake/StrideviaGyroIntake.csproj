@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Animation.Designer.cs">
+      <DependentUpon>Animation.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataIntake.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
