@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AngleChartsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AngleChartsForm.Designer.cs">
+      <DependentUpon>AngleChartsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Animation.cs">
       <SubType>Form</SubType>
     </Compile>

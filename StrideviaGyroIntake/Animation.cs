@@ -58,6 +58,9 @@ namespace StrideviaGyroIntake
                 thighAngleDeg[i] = 30 - kneeAngleDeg[i] / 2;
             }
 
+            AngleChartsForm angleCharts = new AngleChartsForm(kneeAngleDeg, thighAngleDeg);
+            angleCharts.Show();
+
             toeTrail = new double[N, 2];
 
             double frameTime = 1.0 / 20.0;
@@ -69,11 +72,7 @@ namespace StrideviaGyroIntake
             };
 
             Chart chart1 = new Chart { Dock = DockStyle.Fill };
-            Chart chart2 = new Chart { Dock = DockStyle.Fill };
-            Chart chart3 = new Chart { Dock = DockStyle.Fill };
             chart1.ChartAreas.Add(new ChartArea());
-            chart2.ChartAreas.Add(new ChartArea());
-            chart3.ChartAreas.Add(new ChartArea());
 
             frameSlider = new TrackBar
             {
@@ -117,8 +116,6 @@ namespace StrideviaGyroIntake
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
 
             layout.Controls.Add(chart1, 0, 0);
-            layout.Controls.Add(chart2, 0, 1);
-            layout.Controls.Add(chart3, 0, 2);
             layout.Controls.Add(frameSlider, 0, 3);
             layout.Controls.Add(playButton, 0, 4);
 
@@ -235,36 +232,17 @@ namespace StrideviaGyroIntake
                 chart1.ChartAreas[0].AxisX.Maximum = 1;
                 chart1.ChartAreas[0].AxisY.Minimum = -1;
                 chart1.ChartAreas[0].AxisY.Maximum = 1;
+
+                chart1.ChartAreas[0].AxisX.Interval = 1;
+                chart1.ChartAreas[0].AxisY.Interval = 1;
+
                 chart1.Titles.Clear();
                 chart1.Titles.Add($"Frame {i + 1} / {kneeAngle.Length}");
 
-                // Knee Angle chart
-                chart2.Series.Clear();
-                Series kneeSeries = new Series("Knee Angle") { ChartType = SeriesChartType.Line, Color = Color.Blue };
-                for (int j = 0; j <= i; j++) kneeSeries.Points.AddXY(j, kneeAngleDeg[j]);
-                chart2.Series.Add(kneeSeries);
-                chart2.ChartAreas[0].AxisX.Minimum = 0;
-                chart2.ChartAreas[0].AxisX.Maximum = kneeAngle.Length;
-                chart2.ChartAreas[0].AxisY.Minimum = Math.Floor(kneeAngleDeg.Min() - 5);
-                chart2.ChartAreas[0].AxisY.Maximum = Math.Floor(kneeAngleDeg.Max() + 5);
-                chart2.Titles.Clear();
-                chart2.Titles.Add("Knee Angle Over Time");
 
-                // Thigh Angle chart
-                chart3.Series.Clear();
-                Series thighSeries = new Series("Thigh Angle") { ChartType = SeriesChartType.Line, Color = Color.Orange };
-                for (int j = 0; j <= i; j++) thighSeries.Points.AddXY(j, thighAngleDeg[j]);
-                chart3.Series.Add(thighSeries);
-                chart3.ChartAreas[0].AxisX.Minimum = 0;
-                chart3.ChartAreas[0].AxisX.Maximum = kneeAngle.Length;
-                chart3.ChartAreas[0].AxisY.Minimum = Math.Floor(thighAngleDeg.Min() - 5);
-                chart3.ChartAreas[0].AxisY.Maximum = Math.Floor(thighAngleDeg.Max() + 5);
-                chart3.Titles.Clear();
-                chart3.Titles.Add("Thigh Angle Over Time");
 
-                chart1.Invalidate();
-                chart2.Invalidate();
-                chart3.Invalidate();
+                angleCharts.UpdateCharts(i);
+              
             }
 
             UpdateCharts(0);
