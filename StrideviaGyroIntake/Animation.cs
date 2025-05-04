@@ -178,8 +178,8 @@ namespace StrideviaGyroIntake
 
                 double[] length = new double[]
                 {
-                    Math.Pow(knee[0] - hip[0] , 2),
-                    Math.Pow(knee[1] - hip[1] , 2)
+                    Math.Pow(foot[0] - knee[0] , 2),
+                    Math.Pow(foot[1] - knee[1] , 2)
                 };
 
                 Console.WriteLine(Math.Sqrt(length[0] + length[1]));
@@ -254,22 +254,28 @@ namespace StrideviaGyroIntake
                      hip[1] + thighLen * Math.Sin(thighAngle)
                 };
 
-                double[] baseFoot =
-                {
-                    knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
-                    knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
-                };
-
-                double[] offset =
-                {
-                   0.08 * Math.Sin(2 * Math.PI * i / kneeAngle.Length),
-                   0.08 * Math.Cos(2 * Math.PI * i / kneeAngle.Length)
+                /* double[] baseFoot =
+                 {
+                     knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
+                     knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
                  };
 
+                 double[] offset =
+                 {
+                    0.08 * Math.Sin(2 * Math.PI * i / kneeAngle.Length),
+                    0.08 * Math.Cos(2 * Math.PI * i / kneeAngle.Length)
+                  };
+
+                 foot = new double[]
+                 {
+                     baseFoot[0] + offset[0],
+                     baseFoot[1] + offset[1]
+                 };
+                */
                 foot = new double[]
                 {
-                    baseFoot[0] + offset[0],
-                    baseFoot[1] + offset[1]
+                  knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
+                  knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
                 };
 
                 toe = new double[]
