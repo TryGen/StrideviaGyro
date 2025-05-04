@@ -68,7 +68,7 @@ namespace StrideviaGyroIntake
               kneeAngleDeg.Length,
               Math.Floor(kneeAngleDeg.Min() - 5),
               Math.Floor(kneeAngleDeg.Max() + 5),
-              "Seconds",
+              "Frame",
               "Knee Angle (°)",
               "Knee Angle Over Time"
               );
@@ -85,7 +85,7 @@ namespace StrideviaGyroIntake
                 thighAngleDeg.Length,
                 Math.Floor(thighAngleDeg.Min() - 5),
                 Math.Floor(thighAngleDeg.Max() + 5),
-                "Seconds",
+                "Frame",
                 "Thigh Angle (°)",
                 "Thigh Angle Over Time"
                 );
@@ -103,13 +103,17 @@ namespace StrideviaGyroIntake
             chart.ChartAreas[0].AxisY.Minimum = yMin;
             chart.ChartAreas[0].AxisY.Maximum = yMax;
             chart.ChartAreas[0].AxisX.Title = xTitle;
+            chart.ChartAreas[0].AxisX.TitleFont = new Font("Arial", 12, FontStyle.Bold);
             chart.ChartAreas[0].AxisY.Title = yTitle;
+            chart.ChartAreas[0].AxisY.TitleFont = new Font("Arial", 12, FontStyle.Bold);
 
             //All the charts should go like this for easier data visualisation
             chart.ChartAreas[0].AxisY.Interval = 10;
 
             chart.Titles.Clear();
-            chart.Titles.Add(Title);
+            Title title = new Title(Title, Docking.Top, new Font("Arial", 14, FontStyle.Bold), Color.Black);
+            chart.Titles.Add(title);
+            
         }
 
 

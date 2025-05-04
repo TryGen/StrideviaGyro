@@ -29,6 +29,10 @@ namespace StrideviaGyroIntake
         {
             InitializeComponent();
 
+            DataIntake data = new DataIntake();
+
+            data.getRawData();
+
             /*   DataIntake data = new DataIntake();
                data.getRawData();*/
 
@@ -207,7 +211,10 @@ namespace StrideviaGyroIntake
                 chart1.ChartAreas[0].AxisY.Interval = 1;
 
                 chart1.Titles.Clear();
-                chart1.Titles.Add($"Frame {i + 1} / {kneeAngle.Length}");
+
+
+                Title title = new Title($"Frame {i + 1} / {kneeAngle.Length}", Docking.Top, new Font("Arial", 12, FontStyle.Bold), Color.Black);
+                chart1.Titles.Add(title);
 
 
 

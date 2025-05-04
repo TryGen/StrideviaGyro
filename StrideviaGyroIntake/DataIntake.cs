@@ -8,7 +8,7 @@ using System.Globalization;
 public class DataIntake
 {
 
-    private string path = "C:\\Users\\user\\Desktop\\angle_test.csv";
+    public static string path = "C:\\Users\\user\\Desktop\\angle_test.csv";
     private List<string[]> csvData = new List<string[]>();
     public static List<Quaternion> gyroData = new List<Quaternion>();
 
