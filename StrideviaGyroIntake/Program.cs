@@ -14,6 +14,10 @@ namespace StrideviaGyroIntake
         [STAThread]
         static void Main()
         {
+            DataIntake data = new DataIntake();
+
+            data.getRawData();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Animation());

@@ -25,10 +25,29 @@ namespace StrideviaGyroIntake
                 this.kneeAngleDeg = kneeAngleDeg;
                 this.thighAngleDeg = thighAngleDeg;
 
-                chartKnee = new Chart { Dock = DockStyle.Top, Height = this.Height / 2 };
-                chartKnee.ChartAreas.Add(new ChartArea());
+            this.Width -= 100;
 
-                chartThigh = new Chart { Dock = DockStyle.Fill };
+            this.Height += 50;
+
+            /*      chartKnee = new Chart { Dock = DockStyle.Top, Height = this.Height / 2 };
+                  chartThigh = new Chart { Dock = DockStyle.Fill };*/
+
+              chartKnee = new Chart
+              {
+                Size = new Size(this.ClientSize.Width, 250),
+                Location = new Point(0, 0),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+              };
+
+              chartThigh = new Chart
+              {
+                Size = new Size(this.ClientSize.Width, 250),
+                Location = new Point(0, chartKnee.Bottom),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+              };
+
+
+            chartKnee.ChartAreas.Add(new ChartArea());
                 chartThigh.ChartAreas.Add(new ChartArea());
 
                 this.Controls.Add(chartThigh);
@@ -41,27 +60,59 @@ namespace StrideviaGyroIntake
                 var kneeSeries = new Series("Knee Angle") { ChartType = SeriesChartType.Line, Color = Color.Blue };
                 for (int j = 0; j <= currentFrame; j++) kneeSeries.Points.AddXY(j, kneeAngleDeg[j]);
                 chartKnee.Series.Add(kneeSeries);
-                chartKnee.ChartAreas[0].AxisX.Minimum = 0;
-                chartKnee.ChartAreas[0].AxisX.Maximum = kneeAngleDeg.Length;
-                chartKnee.ChartAreas[0].AxisY.Minimum = Math.Floor(kneeAngleDeg.Min() - 5);
-                chartKnee.ChartAreas[0].AxisY.Maximum = Math.Floor(kneeAngleDeg.Max() + 5);
-                chartKnee.Titles.Clear();
-                chartKnee.Titles.Add("Knee Angle Over Time");
 
-                chartThigh.Series.Clear();
+            SetChart
+             (
+              ref chartKnee,
+              0,
+              kneeAngleDeg.Length,
+              Math.Floor(kneeAngleDeg.Min() - 5),
+              Math.Floor(kneeAngleDeg.Max() + 5),
+              "Seconds",
+              "Knee Angle (°)",
+              "Knee Angle Over Time"
+              );
+
+            chartThigh.Series.Clear();
                 var thighSeries = new Series("Thigh Angle") { ChartType = SeriesChartType.Line, Color = Color.Orange };
                 for (int j = 0; j <= currentFrame; j++) thighSeries.Points.AddXY(j, thighAngleDeg[j]);
                 chartThigh.Series.Add(thighSeries);
-                chartThigh.ChartAreas[0].AxisX.Minimum = 0;
-                chartThigh.ChartAreas[0].AxisX.Maximum = thighAngleDeg.Length;
-                chartThigh.ChartAreas[0].AxisY.Minimum = Math.Floor(thighAngleDeg.Min() - 5);
-                chartThigh.ChartAreas[0].AxisY.Maximum = Math.Floor(thighAngleDeg.Max() + 5);
-                chartThigh.Titles.Clear();
-                chartThigh.Titles.Add("Thigh Angle Over Time");
+
+               SetChart
+               (
+                ref chartThigh,
+                0, 
+                thighAngleDeg.Length,
+                Math.Floor(thighAngleDeg.Min() - 5),
+                Math.Floor(thighAngleDeg.Max() + 5),
+                "Seconds",
+                "Thigh Angle (°)",
+                "Thigh Angle Over Time"
+                );
+
+               
 
                 chartKnee.Invalidate();
                 chartThigh.Invalidate();
             }
+
+           private void SetChart(ref Chart chart,double xMin, double xMax, double yMin, double yMax, string xTitle, string yTitle, string Title)
+          {
+            chart.ChartAreas[0].AxisX.Minimum = xMin;
+            chart.ChartAreas[0].AxisX.Maximum = xMax;
+            chart.ChartAreas[0].AxisY.Minimum = yMin;
+            chart.ChartAreas[0].AxisY.Maximum = yMax;
+            chart.ChartAreas[0].AxisX.Title = xTitle;
+            chart.ChartAreas[0].AxisY.Title = yTitle;
+
+            //All the charts should go like this for easier data visualisation
+            chart.ChartAreas[0].AxisY.Interval = 10;
+
+            chart.Titles.Clear();
+            chart.Titles.Add(Title);
         }
+
+
     }
+}
 

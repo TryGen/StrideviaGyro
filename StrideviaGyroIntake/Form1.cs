@@ -14,7 +14,6 @@ namespace StrideviaGyroIntake
     public partial class Form1 : Form
     {
 
-        DataIntake data = new DataIntake();
 
         private int normalizer = 100;
 
@@ -43,7 +42,6 @@ namespace StrideviaGyroIntake
 
             chart1.Legends.Clear();
 
-            data.getRawData();
 
             Series series = new Series
             {
@@ -71,9 +69,9 @@ namespace StrideviaGyroIntake
                    series.Points.AddXY(x, y);
                }*/
 
-            for (double x = 0; x < data.size / normalizer; x += 0.1)
+            for (double x = 0; x < DataIntake.size / normalizer; x += 0.1)
             {
-                double y = data.gyroData[(int)(x*normalizer)].toAngle();
+                double y = DataIntake.gyroData[(int)(x*normalizer)].toAngle();
                 series.Points.AddXY(x, y);
             }
 

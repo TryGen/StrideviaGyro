@@ -10,14 +10,14 @@ public class DataIntake
 
     private string path = "C:\\Users\\user\\Desktop\\angle_test.csv";
     private List<string[]> csvData = new List<string[]>();
-    public List<Quaternion> gyroData = new List<Quaternion>();
+    public static List<Quaternion> gyroData = new List<Quaternion>();
 
     /// <summary>
     /// The time it takes the gyroscope to calibrate
     /// </summary>
     private int calibrationTime = 190;
 
-    public int size;
+    public static int size;
 
     public void getRawData()
     {
