@@ -261,7 +261,7 @@ namespace StrideviaGyroIntake
                      hip[1] + thighLen * Math.Sin(thighAngle)
                 };
 
-                /* double[] baseFoot =
+              /*   double[] baseFoot =
                  {
                      knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
                      knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
