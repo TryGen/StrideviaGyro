@@ -49,9 +49,10 @@ public class DataIntake
         }
 
         size = gyroData.Count;
-       
+
 
     }
+
 
     private void readFromCSV()
     {
@@ -62,10 +63,48 @@ public class DataIntake
         {
             string line = reader.ReadLine();
             string[] values = line.Split(',');
+
+
+
             csvData.Add(values);
         }
 
 
+    }
+
+    /// <summary>
+    /// For data validating.
+    /// </summary>
+
+    static List<string> keyWords = new List<string>() {"Data" , "AccX", "AccY" , "AccZ" , "GyroX" , "GyroY" , "GyroZ" , "QuatX" , "QuatY" , "QuatZ" , "QuatW"};
+      
+    public static bool CheckCSV()
+    {
+        StreamReader reader = new StreamReader(path);
+
+        ///Testing
+        if (!reader.EndOfStream)
+        {
+            string line = reader.ReadLine();
+            string[] values = line.Split(',');
+
+            if (!ValidateCSV(values))
+            return false;
+
+        }
+
+        return true && !reader.EndOfStream;
+    }
+
+    public static bool ValidateCSV(string[] values)
+    {
+        foreach(string var in values)
+        {
+            if (!keyWords.Contains(var))
+                return false;
+        }
+
+        return true;
     }
 
 

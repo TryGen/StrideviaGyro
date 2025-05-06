@@ -25,10 +25,10 @@ namespace StrideviaGyroIntake
         private void button1_Click(object sender, EventArgs e)
         {
             string userInput = textBox1.Text;
+            DataIntake.path = userInput;
 
-            if (File.Exists(userInput))
+            if (File.Exists(userInput) && DataIntake.CheckCSV())
             {
-                DataIntake.path = userInput;
 
                 Animation animation = new Animation();
 
