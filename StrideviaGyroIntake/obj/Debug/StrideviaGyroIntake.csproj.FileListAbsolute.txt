@@ -1,7 +1,6 @@
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\StrideviaGyroIntake.exe.config
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\StrideviaGyroIntake.exe
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\StrideviaGyroIntake.pdb
-C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.csproj.AssemblyReference.cache
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.Form1.resources
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.Properties.Resources.resources
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.csproj.GenerateResource.cache
