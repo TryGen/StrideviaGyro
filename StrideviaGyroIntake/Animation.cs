@@ -40,6 +40,13 @@ namespace StrideviaGyroIntake
             double[] kneeAngle = new double[N];
             double[] kneeAngleDeg = new double[N];
             double[] thighAngleDeg = new double[N];
+            double[] footToeAngleDeg = new double[N];
+
+
+            double[] rawKneeDeg = new double[N];
+            double[] rawThighDeg = new double[N];
+            double[] rawFootToeDeg = new double[N];
+
 
             int lastUpdatedTrailFrame = -1;
 
@@ -55,14 +62,47 @@ namespace StrideviaGyroIntake
 
                 kneeAngle[i] = pitch;
 
-                /* kneeAngleDeg[i] = pitch * 180.0 / Math.PI;
-                 thighAngleDeg[i] = (-kneeAngle[i] / 2 - Math.PI / 8) * 180.0 / Math.PI; */
 
-                kneeAngleDeg[i] = pitch * (180.0 / Math.PI) + 85;
-                thighAngleDeg[i] = 30 - kneeAngleDeg[i] / 2;
+                /* kneeAngleDeg[i] = pitch * (180.0 / Math.PI) + 85;
+                 thighAngleDeg[i] = 30 - kneeAngleDeg[i] / 2;*/
+
+                double dorsiflexionRad = pitch;
+                double dorsiflexionDeg = pitch * (180.0 / Math.PI);
+
+                double thighDeg = 180 - dorsiflexionDeg / 2 - 200;
+                double shankDeg = dorsiflexionDeg / 2 + 10;
+
+                double thighRad = thighDeg * Math.PI / 180.0;
+                double shankRad = shankDeg * Math.PI / 180.0;
+
+                double footToeRad = thighRad + shankRad + (Math.PI / 2 + dorsiflexionRad);
+                double footToeDeg = footToeRad * 180.0 / Math.PI;
+
+                /* footToeAngleDeg[i] = footToeDeg;
+                 thighAngleDeg[i] = thighDeg;
+                 kneeAngleDeg[i] = shankDeg;*/
+
+                rawThighDeg[i] = thighDeg;
+                rawKneeDeg[i] = shankDeg;
+                rawFootToeDeg[i] = footToeDeg;
             }
 
-            AngleChartsForm angleCharts = new AngleChartsForm(kneeAngleDeg, thighAngleDeg);
+            double thighStart = rawThighDeg[0];
+            double kneeStart = rawKneeDeg[0];
+            double footStart = rawFootToeDeg[0];
+
+            float scale_factor = 1f;
+
+            double offset = 20;
+
+            for (int i = 0; i < N; i++)
+            {
+                thighAngleDeg[i] = (rawThighDeg[i] - thighStart + offset + 4) * scale_factor;
+                kneeAngleDeg[i] = (rawKneeDeg[i] - kneeStart + offset) * scale_factor;
+                footToeAngleDeg[i] = (rawFootToeDeg[i] - footStart + offset) * scale_factor;
+            }
+
+            AngleChartsForm angleCharts = new AngleChartsForm(kneeAngleDeg, thighAngleDeg,footToeAngleDeg);
 
             
             this.StartPosition = FormStartPosition.Manual;
@@ -162,7 +202,11 @@ namespace StrideviaGyroIntake
 
                 for (int k = lastUpdatedTrailFrame + 1; k <= i; k++)
                 {
-                    GetSides(out hip, out knee,out foot,out toe,out com, k);
+                    GetSides(out hip, out knee, out foot, out toe, out com, k,
+                    DataIntake.gyroData[k].normalized.w,
+                    DataIntake.gyroData[k].normalized.y,
+                     DataIntake.gyroData[k].normalized.x,
+                     DataIntake.gyroData[k].normalized.z);
 
                     toe = RotatePoint(R, toe);
                     toeTrail[k, 0] = toe[0];
@@ -171,7 +215,12 @@ namespace StrideviaGyroIntake
 
                 lastUpdatedTrailFrame = Math.Max(lastUpdatedTrailFrame, i);
 
-                GetSides(out hip, out knee, out foot, out toe, out com, i);
+                GetSides(out hip, out knee, out foot, out toe, out com, i,
+                    DataIntake.gyroData[i].normalized.w,
+                    DataIntake.gyroData[i].normalized.y,
+                     DataIntake.gyroData[i].normalized.x,
+                     DataIntake.gyroData[i].normalized.z);
+
 
 
                 hip = RotatePoint(R, hip);
@@ -248,8 +297,49 @@ namespace StrideviaGyroIntake
                 }
             });
 
-            void GetSides(out double[] hip, out double[] knee, out double[] foot, out double[] toe, out double[] com, int i)
+
+
+
+            /*  void GetSides(out double[] hip, out double[] knee, out double[] foot, out double[] toe, out double[] com, int i)
+              {
+                  double thighAngle = -kneeAngle[i] / 2 - Math.PI / 8;
+                  double shankAngle = kneeAngle[i] / 2 + Math.PI / 10;
+
+                  hip = new double[] { -0.1, 0 };
+
+                  knee = new double[]
+                  {
+                       hip[0] + thighLen * Math.Cos(thighAngle),
+                       hip[1] + thighLen * Math.Sin(thighAngle)
+                  };
+
+
+                  foot = new double[]
+                  {
+                    knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
+                    knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
+                  };
+
+                  toe = new double[]
+                  {
+                    foot[0],
+                    foot[1] + footLen
+                  };
+
+                  com = new double[]
+                  {
+                      (hip[0] + knee[0] + foot[0]) / 3,
+                     (hip[1] + knee[1] + foot[1]) / 3
+                  };
+
+              }*/
+
+            void GetSides(
+             out double[] hip, out double[] knee, out double[] foot, out double[] toe, out double[] com,
+             int i, double w, double x, double y, double z)
             {
+                double dorsiflexion = GetDorsiflexionAngleFromQuaternion(w, x, y, z);
+
                 double thighAngle = -kneeAngle[i] / 2 - Math.PI / 8;
                 double shankAngle = kneeAngle[i] / 2 + Math.PI / 10;
 
@@ -257,51 +347,43 @@ namespace StrideviaGyroIntake
 
                 knee = new double[]
                 {
-                     hip[0] + thighLen * Math.Cos(thighAngle),
-                     hip[1] + thighLen * Math.Sin(thighAngle)
+                   hip[0] + thighLen * Math.Cos(thighAngle),
+                   hip[1] + thighLen * Math.Sin(thighAngle)
                 };
 
-              /*   double[] baseFoot =
-                 {
-                     knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
-                     knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
-                 };
-
-                 double[] offset =
-                 {
-                    0.08 * Math.Sin(2 * Math.PI * i / kneeAngle.Length),
-                    0.08 * Math.Cos(2 * Math.PI * i / kneeAngle.Length)
-                  };
-
-                 foot = new double[]
-                 {
-                     baseFoot[0] + offset[0],
-                     baseFoot[1] + offset[1]
-                 };
-                */
                 foot = new double[]
                 {
                   knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
                   knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
                 };
 
+                double footAngle = thighAngle + shankAngle + (Math.PI / 2 + dorsiflexion);
+
                 toe = new double[]
                 {
-                  foot[0],
-                  foot[1] + footLen
+                  foot[0] + footLen * Math.Cos(footAngle),
+                  foot[1] + footLen * Math.Sin(footAngle)
                 };
 
                 com = new double[]
                 {
-                    (hip[0] + knee[0] + foot[0]) / 3,
-                   (hip[1] + knee[1] + foot[1]) / 3
+                 (hip[0] + knee[0] + foot[0]) / 3.0,
+                 (hip[1] + knee[1] + foot[1]) / 3.0
                 };
-
             }
+
 
         }
 
+        double GetDorsiflexionAngleFromQuaternion(double w, double x, double y, double z)
+        {
 
+            double sinp = 2.0 * (w * y - x * z);
+            if (Math.Abs(sinp) >= 1)
+                return (sinp >= 0 ? 1 : -1) * (Math.PI / 2);
+            else
+                return Math.Asin(sinp);
+        }
 
         static double[] RotatePoint(double[,] R, double[] point)
         {
