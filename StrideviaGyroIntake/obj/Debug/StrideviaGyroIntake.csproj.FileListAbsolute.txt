@@ -7,3 +7,8 @@ C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\Str
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.csproj.CoreCompileInputs.cache
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.exe
 C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.pdb
+C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\MathNet.Numerics.dll
+C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\System.ValueTuple.dll
+C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\MathNet.Numerics.xml
+C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\bin\Debug\System.ValueTuple.xml
+C:\Users\user\source\repos\StrideviaGyroIntake\StrideviaGyroIntake\obj\Debug\StrideviaGyroIntake.csproj.CopyComplete

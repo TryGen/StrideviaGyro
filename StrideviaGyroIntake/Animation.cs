@@ -40,13 +40,14 @@ namespace StrideviaGyroIntake
             double[] kneeAngle = new double[N];
             double[] kneeAngleDeg = new double[N];
             double[] thighAngleDeg = new double[N];
-            double[] footToeAngleDeg = new double[N];
+         //   double[] footToeAngleDeg = new double[N];
 
 
             double[] rawKneeDeg = new double[N];
             double[] rawThighDeg = new double[N];
-            double[] rawFootToeDeg = new double[N];
+         //   double[] rawFootToeDeg = new double[N];
 
+        
 
             int lastUpdatedTrailFrame = -1;
 
@@ -58,38 +59,29 @@ namespace StrideviaGyroIntake
                 double z = DataIntake.gyroData[i].normalized.z;
 
                 double sinp = 2 * (w * y - x * z);
+
                 double pitch = Math.Abs(sinp) >= 1 ? Math.Sign(sinp) * Math.PI / 2 : Math.Asin(sinp);
 
                 kneeAngle[i] = pitch;
 
 
-                /* kneeAngleDeg[i] = pitch * (180.0 / Math.PI) + 85;
-                 thighAngleDeg[i] = 30 - kneeAngleDeg[i] / 2;*/
-
-                double dorsiflexionRad = pitch;
                 double dorsiflexionDeg = pitch * (180.0 / Math.PI);
 
                 double thighDeg = 180 - dorsiflexionDeg / 2 - 200;
                 double shankDeg = dorsiflexionDeg / 2 + 10;
 
-                double thighRad = thighDeg * Math.PI / 180.0;
-                double shankRad = shankDeg * Math.PI / 180.0;
-
-                double footToeRad = thighRad + shankRad + (Math.PI / 2 + dorsiflexionRad);
-                double footToeDeg = footToeRad * 180.0 / Math.PI;
-
-                /* footToeAngleDeg[i] = footToeDeg;
-                 thighAngleDeg[i] = thighDeg;
-                 kneeAngleDeg[i] = shankDeg;*/
-
                 rawThighDeg[i] = thighDeg;
                 rawKneeDeg[i] = shankDeg;
-                rawFootToeDeg[i] = footToeDeg;
+
+
+                double footAngle =dorsiflexionDeg;
+
+               // rawFootToeDeg[i] = footAngle;
             }
 
             double thighStart = rawThighDeg[0];
             double kneeStart = rawKneeDeg[0];
-            double footStart = rawFootToeDeg[0];
+           // double footStart = rawFootToeDeg[0];
 
             float scale_factor = 1f;
 
@@ -99,10 +91,12 @@ namespace StrideviaGyroIntake
             {
                 thighAngleDeg[i] = (rawThighDeg[i] - thighStart + offset + 4) * scale_factor;
                 kneeAngleDeg[i] = (rawKneeDeg[i] - kneeStart + offset) * scale_factor;
-                footToeAngleDeg[i] = (rawFootToeDeg[i] - footStart + offset) * scale_factor;
+             //   footToeAngleDeg[i] = (rawFootToeDeg[i] - footStart + offset) * scale_factor;
             }
 
-            AngleChartsForm angleCharts = new AngleChartsForm(kneeAngleDeg, thighAngleDeg,footToeAngleDeg);
+          
+
+            AngleChartsForm angleCharts = new AngleChartsForm(kneeAngleDeg, thighAngleDeg/*,footToeAngleDeg*/);
 
             
             this.StartPosition = FormStartPosition.Manual;
@@ -171,7 +165,7 @@ namespace StrideviaGyroIntake
                 Margin = new Padding(0)
             };
 
-            ///Stiling the Buttons and Animation:
+    
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); // Chart
 
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));  // Slider
@@ -228,6 +222,7 @@ namespace StrideviaGyroIntake
                 foot = RotatePoint(R, foot);
                 toe = RotatePoint(R, toe);
                 com = RotatePoint(R, com);
+
 
                 double[] length = new double[]
                 {
@@ -300,40 +295,6 @@ namespace StrideviaGyroIntake
 
 
 
-            /*  void GetSides(out double[] hip, out double[] knee, out double[] foot, out double[] toe, out double[] com, int i)
-              {
-                  double thighAngle = -kneeAngle[i] / 2 - Math.PI / 8;
-                  double shankAngle = kneeAngle[i] / 2 + Math.PI / 10;
-
-                  hip = new double[] { -0.1, 0 };
-
-                  knee = new double[]
-                  {
-                       hip[0] + thighLen * Math.Cos(thighAngle),
-                       hip[1] + thighLen * Math.Sin(thighAngle)
-                  };
-
-
-                  foot = new double[]
-                  {
-                    knee[0] + shankLen * Math.Cos(thighAngle + shankAngle),
-                    knee[1] + shankLen * Math.Sin(thighAngle + shankAngle)
-                  };
-
-                  toe = new double[]
-                  {
-                    foot[0],
-                    foot[1] + footLen
-                  };
-
-                  com = new double[]
-                  {
-                      (hip[0] + knee[0] + foot[0]) / 3,
-                     (hip[1] + knee[1] + foot[1]) / 3
-                  };
-
-              }*/
-
             void GetSides(
              out double[] hip, out double[] knee, out double[] foot, out double[] toe, out double[] com,
              int i, double w, double x, double y, double z)
@@ -385,6 +346,28 @@ namespace StrideviaGyroIntake
                 return Math.Asin(sinp);
         }
 
+       
+        void QuaternionToEulerYZX(double w, double x, double y, double z, out double yaw, out double pitch, out double roll)
+        {
+            
+            double R11 = 1 - 2 * (y * y + z * z);
+            double R12 = 2 * (x * y - z * w);
+            double R13 = 2 * (x * z + y * w);
+            double R21 = 2 * (x * y + z * w);
+            double R22 = 1 - 2 * (x * x + z * z);
+            double R23 = 2 * (y * z - x * w);
+            double R31 = 2 * (x * z - y * w);
+            double R32 = 2 * (y * z + x * w);
+            double R33 = 1 - 2 * (x * x + y * y);
+
+           
+            pitch = Math.Asin(-R31); 
+            roll = Math.Atan2(R32, R33); 
+            yaw = Math.Atan2(R21, R11);
+        }
+
+        
+
         static double[] RotatePoint(double[,] R, double[] point)
         {
             return new double[]
@@ -423,5 +406,7 @@ namespace StrideviaGyroIntake
                 series.Points.AddXY(toeTrail[i, 0], toeTrail[i, 1]);
             chart.Series.Add(series);
         }
+
+        
     }
 }

@@ -20,7 +20,7 @@ namespace StrideviaGyroIntake
         private double[] thighAngleDeg;
         private double[] footToeAngleDeg;
 
-        public AngleChartsForm(double[] kneeAngleDeg, double[] thighAngleDeg, double[] footToeAngleDeg)
+        public AngleChartsForm(double[] kneeAngleDeg, double[] thighAngleDeg/*, double[] footToeAngleDeg*/)
         {
             InitializeComponent();
 
@@ -30,10 +30,10 @@ namespace StrideviaGyroIntake
 
             this.kneeAngleDeg = kneeAngleDeg;
             this.thighAngleDeg = thighAngleDeg;
-            this.footToeAngleDeg = footToeAngleDeg;
+        //    this.footToeAngleDeg = footToeAngleDeg;
 
             this.Width -= 100;
-            this.Height += 300; 
+            this.Height += 80; 
 
             chartKnee = new Chart
             {
@@ -49,21 +49,23 @@ namespace StrideviaGyroIntake
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
-            chartFootToe = new Chart
+          /*  chartFootToe = new Chart
             {
                 Size = new Size(this.ClientSize.Width, 250),
                 Location = new Point(0, chartThigh.Bottom),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
-            };
+            };*/
 
             chartKnee.ChartAreas.Add(new ChartArea());
             chartThigh.ChartAreas.Add(new ChartArea());
-            chartFootToe.ChartAreas.Add(new ChartArea());
+          //  chartFootToe.ChartAreas.Add(new ChartArea());
 
-            this.Controls.Add(chartFootToe);
+          //  this.Controls.Add(chartFootToe);
             this.Controls.Add(chartThigh);
             this.Controls.Add(chartKnee);
         }
+
+        
 
         public void UpdateCharts(int currentFrame)
         {
@@ -85,18 +87,20 @@ namespace StrideviaGyroIntake
                 Math.Floor(thighAngleDeg.Min() - 5), Math.Floor(thighAngleDeg.Max() + 5),
                 "Frame", "Thigh Angle (°)", "Thigh Angle Over Time");
 
-            chartFootToe.Series.Clear();
+      /*      chartFootToe.Series.Clear();
             var footToeSeries = new Series("Foot-Toe Angle") { ChartType = SeriesChartType.Line, Color = Color.Green };
-            for (int j = 0; j <= currentFrame; j++) footToeSeries.Points.AddXY(j, footToeAngleDeg[j]);
+
+            double x = 0;
+            for (int j = 0; j <= currentFrame; j++ , x+= (double)(j - 1) / 20) footToeSeries.Points.AddXY(x, footToeAngleDeg[j]);
             chartFootToe.Series.Add(footToeSeries);
 
             SetChart(ref chartFootToe, 0, footToeAngleDeg.Length,
                 Math.Floor(footToeAngleDeg.Min() - 5), Math.Floor(footToeAngleDeg.Max() + 5),
-                "Frame", "Foot-Toe Angle (°)", "Foot-Toe Angle Over Time");
+                "Frame", "Foot-Toe Angle (°)", "Foot-Toe Angle Over Time"); */
 
             chartKnee.Invalidate();
             chartThigh.Invalidate();
-            chartFootToe.Invalidate();
+         //   chartFootToe.Invalidate();
         }
 
         private void SetChart(ref Chart chart, double xMin, double xMax, double yMin, double yMax, string xTitle, string yTitle, string titleText)
@@ -115,6 +119,7 @@ namespace StrideviaGyroIntake
             Title title = new Title(titleText, Docking.Top, new Font("Arial", 14, FontStyle.Bold), Color.Black);
             chart.Titles.Add(title);
         }
+
     }
 
 }
